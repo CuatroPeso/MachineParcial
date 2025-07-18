@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Predicción con Modelos ML</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #1e3a5f;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    
+    .container {
+      display: flex;
+      justify-content: center;
+      gap: 50px;
+      background-color: white;
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      flex-wrap: wrap;
+    }
+
+    .form-box {
+      width: 350px;
+    }
+
+    h2 {
+      margin-bottom: 10px;
+      font-size: 20px;
+      color: #333;
+    }
+
+    .description {
+      font-size: 14px;
+      margin-bottom: 15px;
+      color: #555;
+    }
+
+    .inputs-container {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    label {
+      font-size: 13px;
+      color: #444;
+    }
+
+    input[type="number"] {
+      width: 100%;
+      padding: 8px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    button {
+      padding: 10px 15px;
+      background-color: #0078D7;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #005fa3;
+    }
+
+    .result {
+      margin-top: 10px;
+      font-weight: bold;
+      color: #222;
+    }
+  </style>
+  <script>
+    function getFeatureValues(prefix, count) {
+      const values = [];
+      for (let i = 0; i < count; i++) {
+        const val = document.getElementById(`${prefix}_${i}`).value;
+        values.push(Number(val));
+      }
+      return values;
+    }
+
+    async function predictKillImpact() {
+      const features = getFeatureValues("kill", 3);
+
+      const response = await fetch('/predict_kill', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ features: features })
+      });
+
+      const result = await response.json();
+      document.getElementById('output_kill').textContent =
+        result.error || `Kill Impact: ${result.kill_impact_prediction}`;
+    }
+
+    async function predictRoundWinner() {
+      const features = getFeatureValues("round", 15);
+
+      const response = await fetch('/predict_round', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ features: features })
+      });
+
+      const result = await response.json();
+      document.getElementById('output_round').textContent =
+        result.error || `Round Winner (CT gana): ${result.round_winner_prediction}`;
+    }
+  </script>
+</head>
+<body>
+  <div class="container">
+    <div class="form-box">
+      <h2>Modelo KillImpact</h2>
+      <p class="description">Predice el impacto de las granadas en las kills.</p>
+      <div class="inputs-container">
+        <label>RoundHeadshots</label>
+        <input type="number" step="any" min="0" id="kill_0" placeholder="Ej: 1">
+
+        <label>RNonLethalGrenadesThrown</label>
+        <input type="number" step="any" min="0" id="kill_1" placeholder="Ej: 2">
+
+        <label>RLethalGrenadesThrown</label>
+        <input type="number" step="any" min="0" id="kill_2" placeholder="Ej: 3">
+      </div>
+      <button onclick="predictKillImpact()">Predecir</button>
+      <div id="output_kill" class="result"></div>
+    </div>
+
+    <div class="form-box" style="width: 500px;">
+  <h2>Modelo RoundWinner</h2>
+  <p class="description">Predice lo que puede influir en la victoria de una ronda.</p>
+  <div class="inputs-container" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+    <div>
+      <label>KillImpact</label>
+      <input type="number" step="any" min="0" id="round_0">
+    </div>
+    <div>
+      <label>KAST</label>
+      <input type="number" step="any" min="0" id="round_1">
+    </div>
+    <div>
+      <label>PrimaryAssaultRifle</label>
+      <input type="number" step="any" min="0" max="1" id="round_2">
+    </div>
+    <div>
+      <label>PrimarySniperRifle</label>
+      <input type="number" step="any" min="0" max="1" id="round_3">
+    </div>
+    <div>
+      <label>PrimaryHeavy</label>
+      <input type="number" step="any" min="0" max="1" id="round_4">
+    </div>
+    <div>
+      <label>PrimarySMG</label>
+      <input type="number" step="any" min="0" max="1" id="round_5">
+    </div>
+    <div>
+      <label>PrimaryPistol</label>
+      <input type="number" step="any" min="0" max="1" id="round_6">
+    </div>
+    <div>
+      <label>RoundKills</label>
+      <input type="number" step="any" min="0" id="round_7">
+    </div>
+    <div>
+      <label>RoundAssists</label>
+      <input type="number" step="any" min="0" id="round_8">
+    </div>
+    <div>
+      <label>RoundHeadshots</label>
+      <input type="number" step="any" min="0" id="round_9">
+    </div>
+    <div>
+      <label>RoundFlankKills</label>
+      <input type="number" step="any" min="0" id="round_10">
+    </div>
+    <div>
+      <label>RLethalGrenadesThrown</label>
+      <input type="number" step="any" min="0" id="round_11">
+    </div>
+    <div>
+      <label>RNonLethalGrenadesThrown</label>
+      <input type="number" step="any" min="0" id="round_12">
+    </div>
+    <div>
+      <label>RoundStartingEquipmentValue</label>
+      <input type="number" step="any" min="0" id="round_13">
+    </div>
+    <div>
+      <label>TeamStartingEquipmentValue</label>
+      <input type="number" step="any" min="0" id="round_14">
+    </div>
+  </div>
+  <button onclick="predictRoundWinner()">Predecir</button>
+  <div id="output_round" class="result"></div>
+</div>
