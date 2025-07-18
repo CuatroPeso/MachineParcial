@@ -1,4 +1,6 @@
-# MachineParcial2
+# MachineParcial
+pip install flask numpy joblib
+python app.py
 
 # Modelos de Regresión
 
