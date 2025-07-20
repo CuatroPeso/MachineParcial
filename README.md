@@ -21,3 +21,9 @@ A continuación se listan los distintos modelos usados en este proyecto:
 - [SVM](https://github.com/CuatroPeso/MachineParcial/blob/main/CalSVM.ipynb)
 - [RandomForest](https://github.com/CuatroPeso/MachineParcial/blob/main/CalRandomForest.ipynb)
 - [DecisionTree](https://github.com/CuatroPeso/MachineParcial/blob/main/CalDecisionTree.ipynb)
+
+# Indicaciones transerval
+
+Los archivos y aplicacion utilizados en la evaluacion transversal se encuentran en la carpeta con dicho nombre y el pkl del modelo de clasificacion se referencia en el siguiente link ya que la plataforma de github no me permite subirlo debido a su tamaño
+
+- [RandomForest] (https://drive.google.com/file/d/1DEuyl7toXsatRSRdS5q6jhW7sEuXb06z/view?usp=sharing)
